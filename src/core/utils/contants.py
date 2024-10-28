@@ -1,3 +1,4 @@
+
 #* Create the constants that will be used throughout the application
 HOST: str = "127.0.0.1" #* Server address -- localhost
 PORT: int = 54321 #* Server Port

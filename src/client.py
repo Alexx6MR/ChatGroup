@@ -2,11 +2,10 @@ import socket
 import threading
 import time
 
-#* Create the constants that will be used throughout the application
-HOST: str = "127.0.0.1" #* Server address -- localhost
-PORT: int = 54321 #* Server Port
-buffer: int = 1024 #* Temporary storage.
-encoding: str = "utf-8" #* Data encoding 8-bytes : ascii has 128-bytes.
+import colorama
+from  core.utils.contants import HOST, PORT, buffer, encoding
+from models.client_model import ClientModel
+
 
 
 #* Ask the client to write his nickname
@@ -20,10 +19,11 @@ def connect_to_server() -> socket.socket:
             client.connect((HOST, PORT))
             print()
             print("Connecting to server....")
-            return client
+            color = client.recv(buffer).decode(encoding)
+            return ClientModel(client_socket=client, nickname=nickname, address=client.getsockname, color=color)
         except Exception as e:
-            print(f"No se pudo conectar al servidor: {e}")
-            print("Reintentando en 5 segundos...")
+            print(f"Could not connect to the server: {e}")
+            print("Retrying in 5 seconds...")
             time.sleep(5)
 
 #* Create a client object
@@ -33,12 +33,13 @@ client = connect_to_server()
 def receive()->None:
     while True:
         try:
-            message = client.recv(buffer).decode(encoding)
+            message = client.recv()
             if message == 'NICK':
                 client.send(nickname.encode(encoding))
             else:
-                print(message)
-                
+                print()      
+                print(f"{"" if "*" in message else " " * 40} {message} {colorama.Style.RESET_ALL}")
+                print()
         except:
            print("An error occurred!")
            client.close()
@@ -50,7 +51,7 @@ def receive()->None:
 def write()->None:
     while True:
         try:
-            message = f"{nickname}: {input()}"
+            message = f"{client.color}{nickname}: {input()} "
             client.send(message.encode(encoding))
         except BrokenPipeError:
             print("The message cannot be sent, the server may be down.")
