@@ -1,5 +1,6 @@
+import logging
 import socket
-from core.utils.contants import encoding, buffer
+
 
 class ClientModel:
     def __init__(self, client_socket: socket.socket, address:str, nickname: str = "", color: str = ""):
@@ -7,6 +8,8 @@ class ClientModel:
         self.nickname = nickname
         self.color = color
         self.socket = client_socket
+        self.buffer = 1024 # Temporary storage.
+        self.encoding = "utf-8" # Data encoding 8-bytes : ascii has 128-bytes.
         
     def __str__(self):
         return f"Client(nickname={self.nickname}, address={self.address}, color={self.color})"
@@ -17,16 +20,26 @@ class ClientModel:
             if type(message) == bytes:
                 self.socket.send(message)
             else:
-                self.socket.send(message.encode(encoding))
+                self.socket.send(message.encode(self.encoding))
         except ConnectionResetError as e:
-               print(f"{self.nickname} left the chat!")
-               self.socket.close()
+            print(f"{self.nickname} left the chat!")
+            self.close_socket()
     
     # define the new recv function of the client object
     def recv(self) -> str:
         try:
-            return self.socket.recv(buffer).decode(encoding)
+            return self.socket.recv(self.buffer).decode(self.encoding)
         except ConnectionResetError:
             print(f"{self.nickname} has been unexpectedly disconnected.")
-            self.socket.close()
+            self.close_socket()
             return " "
+    
+    # Make sure to close the socket correctly
+    def close_socket(self) -> None:
+        if self.socket:
+            try:
+                self.socket.close()
+            except Exception as e:
+                logging.error(f"Error closing socket for client {self.nickname}: {e}")
+            finally:
+                self.socket = None # Ensures that the socket is not reused 

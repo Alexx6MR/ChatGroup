@@ -5,6 +5,7 @@ def setupLogging():
     # Create a logger
     logger = logging.getLogger()
     logger.setLevel(logging.DEBUG)
+    logger.propagate = True
     
     # Create a handler for the general log that rotates daily
     file_handler = TimedRotatingFileHandler(

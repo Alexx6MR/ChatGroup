@@ -6,7 +6,7 @@ usedColors = []
 
 def assignColor() -> str:
     if len(colorsList) > 0:
-        color = random.choice(colorsList)
+        color:str = random.choice(colorsList)
         colorsList.remove(color)  # Remove color from list of available colors
         usedColors.append(color)
         return color
