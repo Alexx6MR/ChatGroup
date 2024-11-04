@@ -16,7 +16,8 @@ colorama.init()
 setupLogging()
 
 
-# lists to be able to store clients and their nicknames
+
+# lists to be able to store all the connected clients
 clientsList: list[ClientModel] = [] 
 
 

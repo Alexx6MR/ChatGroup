@@ -8,7 +8,7 @@ class ClientModel:
         self.nickname = nickname
         self.color = color
         self.socket = client_socket
-        self.buffer = 1024 # Temporary storage.
+        self.buffer = 1024
         self.encoding = "utf-8" # Data encoding 8-bytes : ascii has 128-bytes.
         
     def __str__(self):
@@ -16,14 +16,11 @@ class ClientModel:
     
     # define the new send function of the client object
     def send(self, message: str = " ") -> None:
-        try:
-            if type(message) == bytes:
-                self.socket.send(message)
-            else:
-                self.socket.send(message.encode(self.encoding))
-        except ConnectionResetError as e:
-            print(f"{self.nickname} left the chat!")
-            self.close_socket()
+        if type(message) == bytes:
+            self.socket.send(message)
+        else:
+            self.socket.send(message.encode(self.encoding))
+      
     
     # define the new recv function of the client object
     def recv(self) -> str:

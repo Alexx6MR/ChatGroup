@@ -9,7 +9,7 @@ def setupLogging():
     
     # Create a handler for the general log that rotates daily
     file_handler = TimedRotatingFileHandler(
-        'log/server.log',
+        'logs/server.log',
         when='midnight',  
         interval=1,  
         backupCount=7  
@@ -18,7 +18,7 @@ def setupLogging():
 
     # Create a handler for the error log that rotates daily
     error_handler = TimedRotatingFileHandler(
-        'log/server.error.log', 
+        'logs/server.error.log', 
         when='midnight', 
         interval=1,
         backupCount=7 
