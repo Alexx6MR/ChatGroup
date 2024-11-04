@@ -14,7 +14,7 @@ def setupLogging():
         interval=1,  
         backupCount=7  
     )
-    file_handler.setLevel(logging.DEBUG) 
+    file_handler.setLevel(logging.INFO) 
 
     # Create a handler for the error log that rotates daily
     error_handler = TimedRotatingFileHandler(
